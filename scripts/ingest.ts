@@ -79,7 +79,8 @@ ${recipe.instructions}`,
 
     const index = pinecone.index(process.env.PINECONE_INDEX_NAME!)
 
-    const testDocuments = chunks.slice(0, 3)
+    // const testDocuments = chunks.slice(0, 3)
+    const testDocuments = chunks.slice(0, 100)
 
     const vectorStore = await PineconeStore.fromDocuments(
         testDocuments,
@@ -89,9 +90,9 @@ ${recipe.instructions}`,
         },
     )
 
-    const results = await vectorStore.similaritySearch("crispy potatoes", 2)
+    // const results = await vectorStore.similaritySearch("crispy potatoes", 2)
 
-    console.log(results)
+    console.log("Uploaded:", testDocuments.length)
 }
 
 main()
