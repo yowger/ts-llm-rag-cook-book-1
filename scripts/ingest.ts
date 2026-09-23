@@ -3,6 +3,11 @@ import path from "path"
 import { parse } from "csv-parse/sync"
 import { Document } from "@langchain/core/documents"
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters"
+import { OpenAIEmbeddings } from "@langchain/openai"
+import { Pinecone } from "@pinecone-database/pinecone"
+import { PineconeStore } from "@langchain/pinecone"
+
+import "dotenv/config"
 
 type Recipe = {
     id: string
@@ -61,9 +66,32 @@ ${recipe.instructions}`,
 
     const chunks = await splitter.splitDocuments(documents)
 
-    console.log("Recipes:", documents.length)
-    console.log("Chunks:", chunks.length)
-    console.log("chunks: ", chunks)
+    const embeddings = new OpenAIEmbeddings({
+        model: "text-embedding-3-small",
+    })
+
+    // test
+    // const vector = await embeddings.embedQuery(chunks[0].pageContent)
+
+    const pinecone = new Pinecone({
+        apiKey: process.env.PINECONE_API_KEY!,
+    })
+
+    const index = pinecone.index(process.env.PINECONE_INDEX_NAME!)
+
+    const testDocuments = chunks.slice(0, 3)
+
+    const vectorStore = await PineconeStore.fromDocuments(
+        testDocuments,
+        embeddings,
+        {
+            pineconeIndex: index,
+        },
+    )
+
+    const results = await vectorStore.similaritySearch("crispy potatoes", 2)
+
+    console.log(results)
 }
 
 main()

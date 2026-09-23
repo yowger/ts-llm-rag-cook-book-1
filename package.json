@@ -11,8 +11,11 @@
     },
     "dependencies": {
         "@langchain/core": "^1.2.12",
+        "@langchain/openai": "^1.5.8",
+        "@langchain/pinecone": "^1.0.3",
         "@langchain/textsplitters": "^1.0.1",
         "csv-parse": "^7.0.2",
+        "dotenv": "^16.4.5",
         "next": "16.3.6",
         "react": "19.2.8",
         "react-dom": "19.2.8"
