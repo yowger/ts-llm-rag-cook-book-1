@@ -8,7 +8,7 @@
         "start": "next start",
         "lint": "eslint",
         "ingest": "tsx scripts/ingest.ts",
-        "search": "tsx scripts/ingest.ts"
+        "search": "tsx scripts/search.ts"
     },
     "dependencies": {
         "@langchain/core": "^1.2.12",

@@ -36,11 +36,9 @@ async function main() {
                 return header
             })
         },
-        to: 3,
+        to: 100,
         skip_empty_lines: true,
     })
-
-    console.log("Recipes: ", recipes)
 
     const documents = recipes.map((recipe) => {
         return new Document({
