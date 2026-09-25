@@ -60,7 +60,9 @@ ${recipe.instructions}`,
     })
 }
 
-async function loadRecipes({ to }: { to?: number } = {}): Promise<Recipe[]> {
+async function loadRecipes({ maxRows }: { maxRows?: number } = {}): Promise<
+    Recipe[]
+> {
     const csv = fs.readFileSync(CSV_PATH, "utf-8")
 
     const rawRecipes = parse(csv, {
@@ -69,7 +71,7 @@ async function loadRecipes({ to }: { to?: number } = {}): Promise<Recipe[]> {
         trim: true,
         relax_column_count: true,
         bom: true,
-        to: to,
+        to: maxRows,
     }) as Partial<Recipe>[]
 
     const recipes = rawRecipes.filter(isValidRecipe)
