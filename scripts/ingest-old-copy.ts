@@ -51,6 +51,10 @@
 //     // test
 //     // const vector = await embeddings.embedQuery(chunks[0].pageContent)
 
+// embedQuery() → one string → one vector
+
+// embedDocuments() → array of strings → array of vectors
+
 //     const pinecone = new Pinecone({
 //         apiKey: process.env.PINECONE_API_KEY!,
 //     })
