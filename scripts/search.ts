@@ -19,9 +19,29 @@ async function main() {
         pineconeIndex: index,
     })
 
-    const results = await vectorStore.similaritySearch("crispy potatoes", 2)
+    // const results = await vectorStore.similaritySearch("crispy potatoes", 2)
+    const results = await vectorStore.similaritySearch("potato", 3)
 
-    console.log(results)
+    // console.log(results)
+
+    const queries = [
+        // "crispy potatoes",
+        // "creamy potato side dish",
+        // "something crunchy made with potatoes",
+        // "chocolate cake",
+        // "easy chicken dinner",
+        "Whats a good potato recipe?",
+    ]
+
+    for (const query of queries) {
+        const results = await vectorStore.similaritySearch(query, 3)
+
+        console.log(`\nQuery: ${query}`)
+
+        for (const result of results) {
+            console.log("-", result.metadata.title)
+        }
+    }
 }
 
 main()
