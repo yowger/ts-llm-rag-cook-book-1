@@ -106,7 +106,7 @@ async function uploadToPinecone(documents: Document[]) {
 
 async function main() {
     try {
-        const recipes = await loadRecipes({ to: MAX_ROWS })
+        const recipes = await loadRecipes({ maxRows: MAX_ROWS })
         console.log("Loaded recipes:", recipes.length)
 
         const documents = recipes.map(recipeToDocument)
