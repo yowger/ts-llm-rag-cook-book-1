@@ -1,5 +1,7 @@
 "use client"
 
+import LoadingBubble from "@/components/placeholder/loading-bubble"
+import PromptSuggestionRow from "@/components/placeholder/prompt-suggestion-row"
 import { useChat } from "@ai-sdk/react"
 import { useState } from "react"
 
@@ -23,6 +25,12 @@ export default function Home() {
 
     const noMessages = messages.length === 0
 
+   const handlePrompt = (text: string) => {
+    sendMessage({
+        text,
+    })
+}
+
     return (
         <main className="min-h-screen bg-zinc-950 text-zinc-100">
             <section className="mx-auto flex min-h-screen w-full max-w-3xl flex-col px-4 py-8">
@@ -37,7 +45,6 @@ export default function Home() {
                 <div className="flex flex-1 flex-col">
                     {noMessages ? (
                         <div className="flex flex-1 flex-col items-center justify-center text-center">
-                
                             <h2 className="text-2xl font-semibold">
                                 What are you cooking?
                             </h2>
@@ -46,6 +53,10 @@ export default function Home() {
                                 Ask me about recipes, ingredients, cooking
                                 methods, or what you can make for dinner.
                             </p>
+
+                            <br />
+
+                            <PromptSuggestionRow onSelect={handlePrompt} />
                         </div>
                     ) : (
                         <div className="flex flex-col gap-4 pb-6">
@@ -79,6 +90,9 @@ export default function Home() {
                                     </div>
                                 </div>
                             ))}
+
+                            {(status === "submitted" ||
+                                status === "streaming") && <LoadingBubble />}
                         </div>
                     )}
                 </div>
