@@ -1,38 +1,42 @@
 "use client"
 
-import LoadingBubble from "@/components/placeholder/loading-bubble"
-import PromptSuggestionRow from "@/components/placeholder/prompt-suggestion-row"
+import {
+    Conversation,
+    ConversationContent,
+    ConversationDownload,
+    ConversationEmptyState,
+    ConversationScrollButton,
+} from "@/components/ai-elements/conversation"
+import {
+    Message,
+    MessageContent,
+    MessageResponse,
+} from "@/components/ai-elements/message"
 import { useChat } from "@ai-sdk/react"
 import { useState } from "react"
+import { MessageSquare } from "lucide-react"
+import {
+    PromptInput,
+    PromptInputMessage,
+    PromptInputSubmit,
+    PromptInputTextarea,
+} from "@/components/ai-elements/prompt-input"
 
 export default function Home() {
     const { messages, sendMessage, status } = useChat()
     const [input, setInput] = useState("")
 
-    const handleSubmit = (event: React.SubmitEvent) => {
-        event.preventDefault()
-
-        if (!input.trim()) {
-            return
-        }
-
-        sendMessage({
-            text: input,
-        })
-
-        setInput("")
-    }
-
     const noMessages = messages.length === 0
 
-   const handlePrompt = (text: string) => {
-    sendMessage({
-        text,
-    })
-}
+    const handleSubmit = (message: PromptInputMessage) => {
+        if (message.text.trim()) {
+            sendMessage({ text: message.text })
+            setInput("")
+        }
+    }
 
     return (
-        <main className="min-h-screen bg-zinc-950 text-zinc-100">
+        <main className="min-h-screen bg-background text-foreground">
             <section className="mx-auto flex min-h-screen w-full max-w-3xl flex-col px-4 py-8">
                 <header className="mb-8">
                     <h1 className="text-2xl font-semibold">RAG Cookbook</h1>
@@ -42,79 +46,64 @@ export default function Home() {
                     </p>
                 </header>
 
-                <div className="flex flex-1 flex-col">
-                    {noMessages ? (
-                        <div className="flex flex-1 flex-col items-center justify-center text-center">
-                            <h2 className="text-2xl font-semibold">
-                                What are you cooking?
-                            </h2>
+                <Conversation>
+                    <ConversationContent>
+                        {noMessages ? (
+                            <ConversationEmptyState
+                                icon={<MessageSquare className="size-12" />}
+                                title="Start a conversation"
+                                description="Type a message below to begin chatting"
+                            />
+                        ) : (
+                            messages.map((message) => {
+                                console.log("🚀 ~ Home ~ message:", message)
 
-                            <p className="mt-2 max-w-md text-sm leading-6 text-zinc-400">
-                                Ask me about recipes, ingredients, cooking
-                                methods, or what you can make for dinner.
-                            </p>
-
-                            <br />
-
-                            <PromptSuggestionRow onSelect={handlePrompt} />
-                        </div>
-                    ) : (
-                        <div className="flex flex-col gap-4 pb-6">
-                            {messages.map((message) => (
-                                <div
-                                    key={message.id}
-                                    className={`flex ${
-                                        message.role === "user"
-                                            ? "justify-end"
-                                            : "justify-start"
-                                    }`}
-                                >
-                                    <div
-                                        className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-6 ${
-                                            message.role === "user"
-                                                ? "bg-orange-500 text-white"
-                                                : "bg-zinc-900 text-zinc-200"
-                                        }`}
+                                return (
+                                    <Message
+                                        key={message.id}
+                                        from={message.role}
                                     >
-                                        {message.parts.map((part, index) => {
-                                            if (part.type === "text") {
-                                                return (
-                                                    <p key={index}>
-                                                        {part.text}
-                                                    </p>
-                                                )
-                                            }
+                                        <MessageContent>
+                                            {message.parts.map((part, i) => {
+                                                switch (part.type) {
+                                                    case "text":
+                                                        return (
+                                                            <MessageResponse
+                                                                key={`${message.id}-${i}`}
+                                                            >
+                                                                {part.text}
+                                                            </MessageResponse>
+                                                        )
+                                                    default:
+                                                        return null
+                                                }
+                                            })}
+                                        </MessageContent>
+                                        <ConversationScrollButton />
+                                    </Message>
+                                )
+                            })
+                        )}
+                    </ConversationContent>
+                </Conversation>
 
-                                            return null
-                                        })}
-                                    </div>
-                                </div>
-                            ))}
-
-                            {(status === "submitted" ||
-                                status === "streaming") && <LoadingBubble />}
-                        </div>
-                    )}
-                </div>
-
-                <form onSubmit={handleSubmit} className="sticky bottom-4 mt-4">
-                    <div className="flex items-center gap-2 rounded-2xl border border-zinc-800 bg-zinc-900 p-2 shadow-xl">
-                        <input
-                            className="flex-1 bg-transparent px-3 py-2 text-sm text-zinc-100 outline-none placeholder:text-zinc-500"
-                            onChange={(event) => setInput(event.target.value)}
-                            value={input}
-                            placeholder="Ask me about recipes..."
-                        />
-
-                        <button
-                            type="submit"
-                            disabled={status === "streaming" || !input.trim()}
-                            className="rounded-xl bg-orange-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-orange-400 disabled:cursor-not-allowed disabled:opacity-40"
-                        >
-                            Send
-                        </button>
-                    </div>
-                </form>
+              
+                <PromptInput
+                    onSubmit={handleSubmit}
+                    className="mt-4 w-full max-w-2xl mx-auto relative"
+                >
+                    <PromptInputTextarea
+                        value={input}
+                        placeholder="Say something..."
+                        onChange={(e) => setInput(e.currentTarget.value)}
+                        className="pr-12"
+                    />
+                    <PromptInputSubmit
+                        status={status === "streaming" ? "streaming" : "ready"}
+                        disabled={!input.trim()}
+                        className="absolute bottom-1 right-1"
+                    />
+                </PromptInput>
             </section>
         </main>
     )

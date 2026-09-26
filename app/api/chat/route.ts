@@ -31,6 +31,8 @@ function createVectorStore(): Promise<PineconeStore> {
     })
 }
 
+export const maxDuration = 30
+
 export async function POST(request: Request) {
     const { messages }: { messages: UIMessage[] } = await request.json()
 
@@ -40,7 +42,6 @@ export async function POST(request: Request) {
         .filter((part) => part.type === "text")
         .map((part) => part.text)
         .join("")
-    console.log("🚀 ~ POST ~ question:", question)
 
     const vectorStore = await createVectorStore()
 
@@ -48,10 +49,13 @@ export async function POST(request: Request) {
     console.log("🚀 ~ POST ~ results:", results)
 
     const context = results.map((doc) => doc.pageContent).join("\n\n")
-    console.log("🚀 ~ POST ~ context:", context)
+    const sources = results.map((doc) => ({
+        recipeId: doc.metadata.recipeId,
+        title: doc.metadata.title,
+        imageName: doc.metadata.imageName,
+    }))
 
     const modelMessages = await convertToModelMessages(messages)
-    console.log("🚀 ~ POST ~ modelMessages:", modelMessages)
 
     const result = streamText({
         model: openai("gpt-5-mini"),
@@ -71,7 +75,16 @@ ${context}
 
         messages: modelMessages,
     })
-    console.log("🚀 ~ POST ~ result:", result)
 
-    return result.toUIMessageStreamResponse()
+    return result.toUIMessageStreamResponse({
+        messageMetadata: ({ part }) => {
+            if (part.type === "start") {
+                return {
+                    sources,
+                }
+            }
+
+            return undefined
+        },
+    })
 }
