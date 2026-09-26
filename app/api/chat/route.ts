@@ -31,7 +31,7 @@ function createVectorStore(): Promise<PineconeStore> {
     })
 }
 
-export const maxDuration = 30
+export const maxDuration = 30;
 
 export async function POST(request: Request) {
     const { messages }: { messages: UIMessage[] } = await request.json()
@@ -46,14 +46,8 @@ export async function POST(request: Request) {
     const vectorStore = await createVectorStore()
 
     const results = await vectorStore.similaritySearch(question, 5)
-    console.log("🚀 ~ POST ~ results:", results)
 
     const context = results.map((doc) => doc.pageContent).join("\n\n")
-    const sources = results.map((doc) => ({
-        recipeId: doc.metadata.recipeId,
-        title: doc.metadata.title,
-        imageName: doc.metadata.imageName,
-    }))
 
     const modelMessages = await convertToModelMessages(messages)
 
@@ -61,30 +55,20 @@ export async function POST(request: Request) {
         model: openai("gpt-5-mini"),
 
         system: `
-You are a helpful recipe assistant.
+        You are a helpful recipe assistant.
 
-Answer the user's question using the recipe context below.
+        Answer the user's question using the recipe context below.
 
-If the answer cannot be found in the provided context,
-say that you don't have enough information.
+        If the answer cannot be found in the provided context,
+        say that you don't have enough information.
 
-Recipe context:
+        Recipe context:
 
-${context}
+        ${context}
         `,
 
         messages: modelMessages,
     })
 
-    return result.toUIMessageStreamResponse({
-        messageMetadata: ({ part }) => {
-            if (part.type === "start") {
-                return {
-                    sources,
-                }
-            }
-
-            return undefined
-        },
-    })
+    return result.toUIMessageStreamResponse()
 }
