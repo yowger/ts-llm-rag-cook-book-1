@@ -3,7 +3,6 @@
 import {
     Conversation,
     ConversationContent,
-    ConversationDownload,
     ConversationEmptyState,
     ConversationScrollButton,
 } from "@/components/ai-elements/conversation"
@@ -11,10 +10,12 @@ import {
     Message,
     MessageContent,
     MessageResponse,
+    MessageActions,
+    MessageAction,
 } from "@/components/ai-elements/message"
 import { useChat } from "@ai-sdk/react"
-import { useState } from "react"
-import { MessageSquare } from "lucide-react"
+import { Fragment, useState } from "react"
+import { CopyIcon, MessageSquare, RefreshCcwIcon } from "lucide-react"
 import {
     PromptInput,
     PromptInputMessage,
@@ -23,8 +24,8 @@ import {
 } from "@/components/ai-elements/prompt-input"
 
 export default function Home() {
-    const { messages, sendMessage, status } = useChat()
     const [input, setInput] = useState("")
+    const { messages, sendMessage, status, regenerate } = useChat()
 
     const noMessages = messages.length === 0
 
@@ -33,6 +34,10 @@ export default function Home() {
             sendMessage({ text: message.text })
             setInput("")
         }
+    }
+
+    const handleCopy = (text: string) => {
+        navigator.clipboard.writeText(text)
     }
 
     return (
@@ -55,40 +60,73 @@ export default function Home() {
                                 description="Type a message below to begin chatting"
                             />
                         ) : (
-                            messages.map((message) => {
+                            messages.map((message, messageIndex) => {
                                 console.log("🚀 ~ Home ~ message:", message)
+                                const isLastMessage =
+                                    messageIndex === messages.length - 1
+
+                                const text = message.parts
+                                    .filter((part) => part.type === "text")
+                                    .map((part) => part.text)
+                                    .join("")
 
                                 return (
-                                    <Message
-                                        key={message.id}
-                                        from={message.role}
-                                    >
-                                        <MessageContent>
-                                            {message.parts.map((part, i) => {
-                                                switch (part.type) {
-                                                    case "text":
-                                                        return (
-                                                            <MessageResponse
-                                                                key={`${message.id}-${i}`}
-                                                            >
-                                                                {part.text}
-                                                            </MessageResponse>
-                                                        )
-                                                    default:
-                                                        return null
-                                                }
-                                            })}
-                                        </MessageContent>
-                               
-                                        <ConversationScrollButton />
-                                    </Message>
+                                    <Fragment key={message.id}>
+                                        <Message from={message.role}>
+                                            <MessageContent>
+                                                {message.parts.map(
+                                                    (part, i) => {
+                                                        switch (part.type) {
+                                                            case "text":
+                                                                return (
+                                                                    <MessageResponse
+                                                                        key={`${message.id}-${i}`}
+                                                                    >
+                                                                        {
+                                                                            part.text
+                                                                        }
+                                                                    </MessageResponse>
+                                                                )
+                                                            default:
+                                                                return null
+                                                        }
+                                                    },
+                                                )}
+                                            </MessageContent>
+                                        </Message>
+
+                                        {message.role === "assistant" &&
+                                            isLastMessage && (
+                                                <MessageActions>
+                                                    {" "}
+                                                    <MessageAction
+                                                        onClick={() =>
+                                                            regenerate()
+                                                        }
+                                                        label="Retry"
+                                                    >
+                                                        {" "}
+                                                        <RefreshCcwIcon className="size-3" />{" "}
+                                                    </MessageAction>{" "}
+                                                    <MessageAction
+                                                        onClick={() =>
+                                                            handleCopy(text)
+                                                        }
+                                                        label="Copy"
+                                                    >
+                                                        {" "}
+                                                        <CopyIcon className="size-3" />{" "}
+                                                    </MessageAction>{" "}
+                                                </MessageActions>
+                                            )}
+                                    </Fragment>
                                 )
                             })
                         )}
                     </ConversationContent>
+                    <ConversationScrollButton />
                 </Conversation>
 
-              
                 <PromptInput
                     onSubmit={handleSubmit}
                     className="mt-4 w-full max-w-2xl mx-auto relative"
