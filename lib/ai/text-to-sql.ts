@@ -25,13 +25,19 @@ export async function textToSql(question: string) {
             - Only query the recipes table.
             - Only generate SELECT queries.
             - Never use SELECT *.
-            - Always explicitly specify the columns you need.
+            - Only select the columns necessary to answer the user's question.
+            - Do not select instructions unless the user asks for instructions.
+            - Do not select ingredients unless the user asks about ingredients
+            or ingredient-related information.
+            - For count questions, return only the count.
+            - For questions asking for recipe names, return only id and title.
             - Never return more than 10 rows.
             - For queries that return multiple recipes, always use LIMIT 10.
-            - Use COUNT(*) when the user asks "how many" or asks for a count.
+            - Use COUNT(*) when the user asks how many or asks for a count.
             - Use WHERE when the user specifies a condition.
             - You may use COUNT, WHERE, ORDER BY, GROUP BY, and LIMIT.
-            - Never generate INSERT, UPDATE, DELETE, DROP, ALTER, TRUNCATE, GRANT, or other write operations.
+            - Never generate INSERT, UPDATE, DELETE, DROP, ALTER, TRUNCATE,
+            GRANT, or other write operations.
             - Never query any table other than recipes.
             - Return only SQL.
 
@@ -51,14 +57,22 @@ export async function textToSql(question: string) {
 }
 
 export function isSafeQuery(sql: string): boolean {
-  const cleanSql = sql.toUpperCase();
-  const forbiddenKeywords = ['DROP', 'DELETE', 'UPDATE', 'INSERT', 'ALTER', 'TRUNCATE', 'GRANT'];
-  
-  for (const keyword of forbiddenKeywords) {
-    if (cleanSql.includes(keyword)) {
-      return false;
-    }
-  }
+    const cleanSql = sql.toUpperCase()
+    const forbiddenKeywords = [
+        "DROP",
+        "DELETE",
+        "UPDATE",
+        "INSERT",
+        "ALTER",
+        "TRUNCATE",
+        "GRANT",
+    ]
 
-  return true;
+    for (const keyword of forbiddenKeywords) {
+        if (cleanSql.includes(keyword)) {
+            return false
+        }
+    }
+
+    return true
 }

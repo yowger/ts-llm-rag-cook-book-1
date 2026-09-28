@@ -60,7 +60,7 @@ async function searchRecipes(question: string): Promise<string> {
     return results.map((doc) => doc.pageContent).join("\n\n")
 }
 
-async function searchDatabase(question: string) {
+async function searchDatabase(question: string): Promise<string> {
     const sqlQuery = await textToSql(question)
 
     const isSafe = isSafeQuery(sqlQuery)
@@ -89,7 +89,6 @@ export async function POST(request: Request) {
 
     if (intent === "out_of_scope") {
         return generateOutOfScopeResponse(messages)
-
     }
 
     if (intent === "vector_search") {
