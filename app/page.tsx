@@ -40,8 +40,6 @@ export default function Home() {
         navigator.clipboard.writeText(text)
     }
 
-    
-
     return (
         <main className="min-h-screen bg-background text-foreground">
             <section className="mx-auto flex min-h-screen w-full max-w-3xl flex-col px-4 py-8">
@@ -62,68 +60,70 @@ export default function Home() {
                                 description="Type a message below to begin chatting"
                             />
                         ) : (
-                            messages.map((message, messageIndex) => {
-                                console.log("🚀 ~ Home ~ message:", message)
-                                const isLastMessage =
-                                    messageIndex === messages.length - 1
+                            <>
+                                {messages.map((message, messageIndex) => {
+                                    console.log("🚀 ~ Home ~ message:", message)
+                                    const isLastMessage =
+                                        messageIndex === messages.length - 1
 
-                                const text = message.parts
-                                    .filter((part) => part.type === "text")
-                                    .map((part) => part.text)
-                                    .join("")
+                                    const text = message.parts
+                                        .filter((part) => part.type === "text")
+                                        .map((part) => part.text)
+                                        .join("")
 
-                                return (
-                                    <Fragment key={message.id}>
-                                        <Message from={message.role}>
-                                            <MessageContent>
-                                                {message.parts.map(
-                                                    (part, i) => {
-                                                        switch (part.type) {
-                                                            case "text":
-                                                                return (
-                                                                    <MessageResponse
-                                                                        key={`${message.id}-${i}`}
-                                                                    >
-                                                                        {
-                                                                            part.text
-                                                                        }
-                                                                    </MessageResponse>
-                                                                )
-                                                            default:
-                                                                return null
-                                                        }
-                                                    },
+                                    return (
+                                        <Fragment key={message.id}>
+                                            <Message from={message.role}>
+                                                <MessageContent>
+                                                    {message.parts.map(
+                                                        (part, i) => {
+                                                            switch (part.type) {
+                                                                case "text":
+                                                                    return (
+                                                                        <MessageResponse
+                                                                            key={`${message.id}-${i}`}
+                                                                        >
+                                                                            {
+                                                                                part.text
+                                                                            }
+                                                                        </MessageResponse>
+                                                                    )
+                                                                default:
+                                                                    return null
+                                                            }
+                                                        },
+                                                    )}
+                                                </MessageContent>
+                                            </Message>
+
+                                            {message.role === "assistant" &&
+                                                isLastMessage && (
+                                                    <MessageActions>
+                                                        {" "}
+                                                        <MessageAction
+                                                            onClick={() =>
+                                                                regenerate()
+                                                            }
+                                                            label="Retry"
+                                                        >
+                                                            {" "}
+                                                            <RefreshCcwIcon className="size-3" />{" "}
+                                                        </MessageAction>{" "}
+                                                        <MessageAction
+                                                            onClick={() =>
+                                                                handleCopy(text)
+                                                            }
+                                                            label="Copy"
+                                                        >
+                                                            {" "}
+                                                            <CopyIcon className="size-3" />{" "}
+                                                        </MessageAction>{" "}
+                                                    </MessageActions>
                                                 )}
-                                            </MessageContent>
-                                        </Message>
-
-                                        {message.role === "assistant" &&
-                                            isLastMessage && (
-                                                <MessageActions>
-                                                    {" "}
-                                                    <MessageAction
-                                                        onClick={() =>
-                                                            regenerate()
-                                                        }
-                                                        label="Retry"
-                                                    >
-                                                        {" "}
-                                                        <RefreshCcwIcon className="size-3" />{" "}
-                                                    </MessageAction>{" "}
-                                                    <MessageAction
-                                                        onClick={() =>
-                                                            handleCopy(text)
-                                                        }
-                                                        label="Copy"
-                                                    >
-                                                        {" "}
-                                                        <CopyIcon className="size-3" />{" "}
-                                                    </MessageAction>{" "}
-                                                </MessageActions>
-                                            )}
-                                    </Fragment>
-                                )
-                            })
+                                        </Fragment>
+                                    )
+                                })}
+                            </>
                         )}
                     </ConversationContent>
                     <ConversationScrollButton />

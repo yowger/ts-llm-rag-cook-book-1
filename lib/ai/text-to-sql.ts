@@ -24,9 +24,16 @@ export async function textToSql(question: string) {
 
             - Only query the recipes table.
             - Only generate SELECT queries.
+            - Never use SELECT *.
+            - Always explicitly specify the columns you need.
+            - Never return more than 10 rows.
+            - For queries that return multiple recipes, always use LIMIT 10.
+            - Use COUNT(*) when the user asks "how many" or asks for a count.
+            - Use WHERE when the user specifies a condition.
             - You may use COUNT, WHERE, ORDER BY, GROUP BY, and LIMIT.
-            - Never generate INSERT, UPDATE, DELETE, DROP, ALTER, or TRUNCATE.
-            - Return only SQL that can safely read recipe data.
+            - Never generate INSERT, UPDATE, DELETE, DROP, ALTER, TRUNCATE, GRANT, or other write operations.
+            - Never query any table other than recipes.
+            - Return only SQL.
 
             User question:
             ${question}
