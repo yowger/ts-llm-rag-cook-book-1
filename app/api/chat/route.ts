@@ -88,7 +88,8 @@ export async function POST(request: Request) {
     let context = ""
 
     if (intent === "out_of_scope") {
-        await generateOutOfScopeResponse(messages)
+        return generateOutOfScopeResponse(messages)
+
     }
 
     if (intent === "vector_search") {
