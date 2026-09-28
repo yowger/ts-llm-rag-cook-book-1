@@ -21,8 +21,7 @@ async function generateResponse(messages: UIMessage[], context: string) {
             - Base your answer on the provided context.
             - Do not invent recipes, ingredients, or instructions.
             - Only include information relevant to the user's question.
-            - If the context does not contain enough information to answer
-              the question, say that you don't have enough information.
+            - If the context does not contain enough information to answer the question, say that you don't have enough information.
 
             Context:
             ${context}
@@ -73,7 +72,7 @@ async function searchDatabase(question: string): Promise<string> {
     console.log("🚀 ~ POST ~ queryResult:", queryResult)
     return JSON.stringify(queryResult)
 }
-
+// finetune questions?
 export async function POST(request: Request) {
     const { messages }: { messages: UIMessage[] } = await request.json()
     const lastMessage = messages[messages.length - 1]

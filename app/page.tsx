@@ -99,25 +99,22 @@ export default function Home() {
                                             {message.role === "assistant" &&
                                                 isLastMessage && (
                                                     <MessageActions>
-                                                        {" "}
                                                         <MessageAction
                                                             onClick={() =>
                                                                 regenerate()
                                                             }
                                                             label="Retry"
                                                         >
-                                                            {" "}
-                                                            <RefreshCcwIcon className="size-3" />{" "}
-                                                        </MessageAction>{" "}
+                                                            <RefreshCcwIcon className="size-3" />
+                                                        </MessageAction>
                                                         <MessageAction
                                                             onClick={() =>
                                                                 handleCopy(text)
                                                             }
                                                             label="Copy"
                                                         >
-                                                            {" "}
-                                                            <CopyIcon className="size-3" />{" "}
-                                                        </MessageAction>{" "}
+                                                            <CopyIcon className="size-3" />
+                                                        </MessageAction>
                                                     </MessageActions>
                                                 )}
                                         </Fragment>
