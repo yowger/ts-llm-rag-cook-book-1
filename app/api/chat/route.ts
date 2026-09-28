@@ -1,37 +1,10 @@
-import { openai } from "@ai-sdk/openai"
-import { Pinecone } from "@pinecone-database/pinecone"
-import { PineconeStore } from "@langchain/pinecone"
-import { OpenAIEmbeddings } from "@langchain/openai"
 import { streamText, convertToModelMessages, type UIMessage } from "ai"
 
-function createVectorStore(): Promise<PineconeStore> {
-    const apiKey = process.env.PINECONE_API_KEY
-    const indexName = process.env.PINECONE_INDEX_NAME
+import { openai } from "@ai-sdk/openai"
+import { classifyIntent } from "@/lib/ai/classifier"
+import { createVectorStore } from "@/app/db/vector/create"
 
-    if (!apiKey) {
-        throw new Error("Missing PINECONE_API_KEY")
-    }
-
-    if (!indexName) {
-        throw new Error("Missing PINECONE_INDEX_NAME")
-    }
-
-    const embeddings = new OpenAIEmbeddings({
-        model: "text-embedding-3-small",
-    })
-
-    const pinecone = new Pinecone({
-        apiKey,
-    })
-
-    const index = pinecone.index(indexName)
-
-    return PineconeStore.fromExistingIndex(embeddings, {
-        pineconeIndex: index,
-    })
-}
-
-export const maxDuration = 30;
+export const maxDuration = 30
 
 export async function POST(request: Request) {
     const { messages }: { messages: UIMessage[] } = await request.json()
@@ -42,6 +15,9 @@ export async function POST(request: Request) {
         .filter((part) => part.type === "text")
         .map((part) => part.text)
         .join("")
+
+    const intent = await classifyIntent(question)
+    console.log("🚀 ~ POST ~ intent:", intent)
 
     const vectorStore = await createVectorStore()
 

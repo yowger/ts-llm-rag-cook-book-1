@@ -8,7 +8,6 @@ const intentSchema = z.object({
         "exact_recipe",
         "count",
         "filter",
-        "out_of_scope",
     ]),
 })
 
@@ -37,9 +36,6 @@ export async function classifyIntent(question: string): Promise<Intent> {
 
             filter:
             The user wants recipes matching specific conditions.
-
-            out_of_scope:
-            The user asks about something unrelated to recipes or the recipe application's capabilities.
 
             User message:
             ${question}

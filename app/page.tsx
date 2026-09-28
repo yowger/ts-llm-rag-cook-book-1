@@ -40,6 +40,8 @@ export default function Home() {
         navigator.clipboard.writeText(text)
     }
 
+    
+
     return (
         <main className="min-h-screen bg-background text-foreground">
             <section className="mx-auto flex min-h-screen w-full max-w-3xl flex-col px-4 py-8">
