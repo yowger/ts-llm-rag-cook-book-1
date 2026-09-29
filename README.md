@@ -1,5 +1,7 @@
 # Basic RAG Recipe Finder
 
+### live: https://ts-llm-rag-cook-book-1-sutd.vercel.app
+
 A recipe question-answering application that combines **semantic vector search** and **structured database search**. An intent classifier determines which retrieval method is appropriate for each question before the retrieved information is passed to the response LLM.
 
 - pinecone used as vector db with text-embedding-3-small, dimensions 1536 and cosine metric.
