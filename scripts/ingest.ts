@@ -19,7 +19,7 @@ type Recipe = {
 
 const FILE_NAME = "13k-recipes.csv"
 const CSV_PATH = path.resolve(process.cwd(), "data", FILE_NAME)
-const MAX_ROWS = 100
+// const MAX_ROWS = 100
 
 function normalizeHeaders(headers: string[]): string[] {
     return headers.map((header) => {
