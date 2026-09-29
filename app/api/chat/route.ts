@@ -61,6 +61,7 @@ async function searchRecipes(question: string): Promise<string> {
 
 async function searchDatabase(question: string): Promise<string> {
     const sqlQuery = await textToSql(question)
+    console.log("🚀 ~ POST ~ sqlQuery:", sqlQuery)
 
     const isSafe = isSafeQuery(sqlQuery)
     if (!isSafe) {
@@ -68,7 +69,6 @@ async function searchDatabase(question: string): Promise<string> {
     }
 
     const queryResult = await executeQuery(sqlQuery)
-    console.log("🚀 ~ POST ~ sqlQuery:", sqlQuery)
     console.log("🚀 ~ POST ~ queryResult:", queryResult)
     return JSON.stringify(queryResult)
 }
@@ -82,6 +82,7 @@ export async function POST(request: Request) {
         .filter((part) => part.type === "text")
         .map((part) => part.text)
         .join("")
+        .trim()
 
     if (!question) {
         return new Response("Question is required", { status: 400 })
