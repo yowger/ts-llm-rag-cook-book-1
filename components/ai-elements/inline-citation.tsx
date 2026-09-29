@@ -49,9 +49,9 @@ export const InlineCitationText = ({
 
 export type InlineCitationCardProps = ComponentProps<typeof HoverCard>;
 
-export const InlineCitationCard = (props: InlineCitationCardProps) => (
-  <HoverCard closeDelay={0} openDelay={0} {...props} />
-);
+// export const InlineCitationCard = (props: InlineCitationCardProps) => (
+//   <HoverCard closeDelay={0} openDelay={0} {...props} />
+// );
 
 export type InlineCitationCardTriggerProps = ComponentProps<typeof Badge> & {
   sources: string[];
@@ -141,49 +141,49 @@ export const InlineCitationCarouselHeader = ({
 
 export type InlineCitationCarouselIndexProps = ComponentProps<"div">;
 
-export const InlineCitationCarouselIndex = ({
-  children,
-  className,
-  ...props
-}: InlineCitationCarouselIndexProps) => {
-  const api = useCarouselApi();
-  const [current, setCurrent] = useState(0);
-  const [count, setCount] = useState(0);
+// export const InlineCitationCarouselIndex = ({
+//   children,
+//   className,
+//   ...props
+// }: InlineCitationCarouselIndexProps) => {
+//   const api = useCarouselApi();
+//   const [current, setCurrent] = useState(0);
+//   const [count, setCount] = useState(0);
 
-  const syncState = useCallback(() => {
-    if (!api) {
-      return;
-    }
-    setCount(api.scrollSnapList().length);
-    setCurrent(api.selectedScrollSnap() + 1);
-  }, [api]);
+//   const syncState = useCallback(() => {
+//     if (!api) {
+//       return;
+//     }
+//     setCount(api.scrollSnapList().length);
+//     setCurrent(api.selectedScrollSnap() + 1);
+//   }, [api]);
 
-  useEffect(() => {
-    if (!api) {
-      return;
-    }
+//   useEffect(() => {
+//     if (!api) {
+//       return;
+//     }
 
-    syncState();
+//     syncState();
 
-    api.on("select", syncState);
+//     api.on("select", syncState);
 
-    return () => {
-      api.off("select", syncState);
-    };
-  }, [api, syncState]);
+//     return () => {
+//       api.off("select", syncState);
+//     };
+//   }, [api, syncState]);
 
-  return (
-    <div
-      className={cn(
-        "flex flex-1 items-center justify-end px-3 py-1 text-muted-foreground text-xs",
-        className
-      )}
-      {...props}
-    >
-      {children ?? `${current}/${count}`}
-    </div>
-  );
-};
+//   return (
+//     <div
+//       className={cn(
+//         "flex flex-1 items-center justify-end px-3 py-1 text-muted-foreground text-xs",
+//         className
+//       )}
+//       {...props}
+//     >
+//       {children ?? `${current}/${count}`}
+//     </div>
+//   );
+// };
 
 export type InlineCitationCarouselPrevProps = ComponentProps<"button">;
 

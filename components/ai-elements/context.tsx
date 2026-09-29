@@ -42,24 +42,24 @@ const useContextValue = () => {
 
 export type ContextProps = ComponentProps<typeof HoverCard> & ContextSchema;
 
-export const Context = ({
-  usedTokens,
-  maxTokens,
-  usage,
-  modelId,
-  ...props
-}: ContextProps) => {
-  const contextValue = useMemo(
-    () => ({ maxTokens, modelId, usage, usedTokens }),
-    [maxTokens, modelId, usage, usedTokens]
-  );
+// export const Context = ({
+//   usedTokens,
+//   maxTokens,
+//   usage,
+//   modelId,
+//   ...props
+// }: ContextProps) => {
+//   const contextValue = useMemo(
+//     () => ({ maxTokens, modelId, usage, usedTokens }),
+//     [maxTokens, modelId, usage, usedTokens]
+//   );
 
-  return (
-    <ContextContext.Provider value={contextValue}>
-      <HoverCard closeDelay={0} openDelay={0} {...props} />
-    </ContextContext.Provider>
-  );
-};
+//   return (
+//     <ContextContext.Provider value={contextValue}>
+//       <HoverCard closeDelay={0} openDelay={0} {...props} />
+//     </ContextContext.Provider>
+//   );
+// };
 
 const ContextIcon = () => {
   const { usedTokens, maxTokens } = useContextValue();
