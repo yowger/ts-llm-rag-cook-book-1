@@ -23,6 +23,8 @@ import {
     PromptInputTextarea,
 } from "@/components/ai-elements/prompt-input"
 
+const MAX_INPUT_LENGTH = 1000
+
 export default function Home() {
     const [input, setInput] = useState("")
     const { messages, sendMessage, status, regenerate } = useChat()
@@ -130,8 +132,12 @@ export default function Home() {
                     onSubmit={handleSubmit}
                     className="mt-4 w-full max-w-2xl mx-auto relative"
                 >
+                    <div className="absolute bottom-2 left-3 text-xs text-muted-foreground">
+                        {input.length}/{MAX_INPUT_LENGTH}
+                    </div>
                     <PromptInputTextarea
                         value={input}
+                        maxLength={MAX_INPUT_LENGTH}
                         placeholder="Say something..."
                         onChange={(e) => setInput(e.currentTarget.value)}
                         className="pr-12"

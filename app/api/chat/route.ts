@@ -72,7 +72,9 @@ async function searchDatabase(question: string): Promise<string> {
     console.log("🚀 ~ POST ~ queryResult:", queryResult)
     return JSON.stringify(queryResult)
 }
-// finetune questions?
+
+const MAX_INPUT_LENGTH = 1000
+
 export async function POST(request: Request) {
     const { messages }: { messages: UIMessage[] } = await request.json()
     const lastMessage = messages[messages.length - 1]
@@ -80,6 +82,14 @@ export async function POST(request: Request) {
         .filter((part) => part.type === "text")
         .map((part) => part.text)
         .join("")
+
+    if (!question) {
+        return new Response("Question is required", { status: 400 })
+    }
+
+    if (question.length > MAX_INPUT_LENGTH) {
+        return new Response("Question is too long", { status: 400 })
+    }
 
     const intent = await classifyIntent(question)
     console.log("🚀 ~ POST ~ intent:", intent)
