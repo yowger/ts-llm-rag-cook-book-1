@@ -5,9 +5,11 @@ import { recipeToDocument } from "@/lib/db/recipes/document"
 import "dotenv/config"
 import { uploadToPinecone } from "@/lib/db/vector/upload"
 
+const TEST_MAX_ROWS = 500
+
 async function main() {
     try {
-        const recipes = await loadRecipes()
+        const recipes = await loadRecipes({ maxRows: TEST_MAX_ROWS })
         console.log("Loaded recipes:", recipes.length)
 
         const documents = recipes.map(recipeToDocument)
@@ -30,11 +32,7 @@ async function main() {
             throw new Error("No chunks were generated")
         }
 
-        // await uploadToPinecone(chunks.slice(0, 100))
-        // console.log("Uploaded:", chunks.slice(0, 100).length)
-
         await uploadToPinecone(chunks)
-        // console.log("Uploaded:", chunks.slice(0, 100).length)
     } catch (error) {
         console.error("Ingest failed:", error)
         process.exit(1)

@@ -4,7 +4,6 @@ import { loadRecipes } from "@/lib/db/recipes/csv"
 import { recipeToDocument } from "@/lib/db/recipes/document"
 
 async function testRecipeLengths() {
-    // const recipes = await loadRecipes()
     const recipes = await loadRecipes()
     console.log("Loaded recipes:", recipes.length)
 
