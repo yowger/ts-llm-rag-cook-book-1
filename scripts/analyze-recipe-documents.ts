@@ -3,7 +3,7 @@
 import { loadRecipes } from "@/lib/db/recipes/csv"
 import { recipeToDocument } from "@/lib/db/recipes/document"
 
-async function testRecipeLengths() {
+async function analyzeRecipeDocuments() {
     const recipes = await loadRecipes()
     console.log("Loaded recipes:", recipes.length)
 
@@ -35,4 +35,4 @@ async function testRecipeLengths() {
     console.log("99th percentile:", percentile(99))
 }
 
-testRecipeLengths()
+analyzeRecipeDocuments()

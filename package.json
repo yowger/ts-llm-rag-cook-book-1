@@ -11,7 +11,7 @@
         "remove-vectors": "tsx scripts/remove-vectors.ts",
         "ingest": "tsx scripts/ingest.ts",
         "search": "tsx scripts/search.ts",
-        "test-recipes": "tsx scripts/test-recipes.ts"
+        "test-recipes": "tsx scripts/analyze-recipe-documents.ts"
     },
     "dependencies": {
         "@ai-sdk/openai": "^3.0.118",
