@@ -5,7 +5,7 @@ import { parse } from "csv-parse/sync"
 
 import { Recipe } from "./types"
 
-const FILE_NAME = "13k-recipes.csv"
+const FILE_NAME = "13k-recipes-edited.csv"
 const CSV_PATH = path.resolve(process.cwd(), "data", FILE_NAME)
 
 export function normalizeHeaders(headers: string[]): string[] {
@@ -15,8 +15,6 @@ export function normalizeHeaders(headers: string[]): string[] {
         if (normalized === "Title") return "title"
         if (normalized === "Ingredients") return "ingredients"
         if (normalized === "Instructions") return "instructions"
-        if (normalized === "Image_Name") return "imageName"
-        if (normalized === "Cleaned_Ingredients") return "cleanedIngredients"
         return normalized
     })
 }
@@ -25,14 +23,14 @@ function isValidRecipe(recipe: Partial<Recipe>): recipe is Recipe {
     return !!(
         recipe.id &&
         recipe.title &&
-        recipe.cleanedIngredients &&
+        recipe.ingredients &&
         recipe.instructions
     )
 }
 
-export async function loadRecipes({ maxRows }: { maxRows?: number } = {}): Promise<
-    Recipe[]
-> {
+export async function loadRecipes({
+    maxRows,
+}: { maxRows?: number } = {}): Promise<Recipe[]> {
     const csv = fs.readFileSync(CSV_PATH, "utf-8")
 
     const rawRecipes = parse(csv, {

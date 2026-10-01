@@ -10,7 +10,8 @@
         "setup-db": "tsx scripts/setup-db.ts",
         "remove-vectors": "tsx scripts/remove-vectors.ts",
         "ingest": "tsx scripts/ingest.ts",
-        "search": "tsx scripts/search.ts"
+        "search": "tsx scripts/search.ts",
+        "test-recipes": "tsx scripts/test-recipes.ts"
     },
     "dependencies": {
         "@ai-sdk/openai": "^3.0.118",
