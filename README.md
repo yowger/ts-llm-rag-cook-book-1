@@ -161,3 +161,15 @@ The model uses the provided context to generate the final answer rather than ret
 ### 5. Response
 
 The generated response is streamed back to the Next.js application and displayed in the chat UI.
+
+## Testing
+
+Loaded recipes: 13493
+Shortest: 173
+Longest: 14843
+Average: 1531
+50th percentile: 1374
+75th percentile: 1921
+90th percentile: 2557
+95th percentile: 3048
+99th percentile: 4275

@@ -7,14 +7,13 @@ export function recipeToDocument(recipe: Recipe): Document {
         pageContent: `Recipe: ${recipe.title}
 
 Ingredients:
-${recipe.cleanedIngredients}
+${recipe.ingredients}
 
 Instructions:
 ${recipe.instructions}`,
         metadata: {
             recipeId: recipe.id,
             title: recipe.title,
-            imageName: recipe.imageName || "",
         },
     })
 }
